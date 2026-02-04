@@ -32,6 +32,25 @@ Backend:
 1. **Start Backend:** `cd backend && npm start` (or `npm start` with nodemon)
 2. **Start Frontend:** `cd frontend && npm start` (or `npm run dev` for Vite)
 
+---
 
 ## TASK - 2 (Backend CRUD)
 
+## Table of Contents:
+  - Screenshots
+  - Installation & Setup
+
+## Screenshots (POSTMAN)
+Create Lead:
+![Create Lead](./screenshots/createLead.png)
+
+Get Leads:
+![Get Leads](./screenshots/getLeads.png)
+
+Update Lead Status:
+![Create Lead](./screenshots/updateLeadStatus.png)
+
+Delete Lead:
+![Delete Lead](./screenshots/deleteLead.png)
+
+---
