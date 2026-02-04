@@ -2,15 +2,13 @@ import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import LeadsPage from './pages/LeadsPage'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      <div>
-        <h1>APP IS RUNNING!</h1>
-      </div>
+      <LeadsPage />
     </>
   )
 }
