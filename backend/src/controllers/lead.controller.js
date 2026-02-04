@@ -52,7 +52,7 @@ export const updateLeadStatus = async (req, res) => {
         const { id } = req.params;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            res.status(400).json({ message: "Lead ID not found"});
+            res.status(400).json({ message: "Lead ID not valid"});
         }
 
         const lead = await Lead.findByIdAndUpdate(
@@ -66,6 +66,28 @@ export const updateLeadStatus = async (req, res) => {
         }
 
         return res.status(200).json(lead);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+};
+
+
+export const deleteLead = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            res.status(400).json({ message: "Lead ID not valid"});
+        }
+
+        const lead = await Lead.findByIdAndDelete(id);
+
+        if (!lead) {
+            res.status(404).json({ message: "Lead not found"});
+        }
+
+        return res.status(200).json({ message: "Lead deleted successfully"});
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error.message });
