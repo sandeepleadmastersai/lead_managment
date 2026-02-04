@@ -1,3 +1,7 @@
+## Table of Contents:
+  - Screenshots
+  - Installation & Setup
+
 ## Screenshots
 Frontend Home Page:
 ![Frontend Home Page](./screenshots/frontend.png)
