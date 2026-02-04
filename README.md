@@ -1,4 +1,4 @@
-## 🛠️ Installation & Setup
+## Installation & Setup
 
 ### 1. Clone the repository
       git clone 
@@ -8,8 +8,8 @@
       cd backend
       npm install
       
-# Create a .env file in the backend directory
-# Add: MONGO_URI=your_mongodb_uri, PORT=8082
+- Create a .env file in the backend directory
+- Add: MONGO_URI=your_mongodb_uri, PORT=8082
 
 ### 3. Frontend Setup
      cd ../frontend
