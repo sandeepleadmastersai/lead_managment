@@ -1,3 +1,5 @@
+## TASK - 1: Environment and skeleton Task
+
 ## Table of Contents:
   - Screenshots
   - Installation & Setup
@@ -29,3 +31,7 @@ Backend:
 ## Running the App
 1. **Start Backend:** `cd backend && npm start` (or `npm start` with nodemon)
 2. **Start Frontend:** `cd frontend && npm start` (or `npm run dev` for Vite)
+
+
+## TASK - 2 (Backend CRUD)
+
