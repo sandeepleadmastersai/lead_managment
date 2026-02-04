@@ -37,8 +37,7 @@ Backend:
 ## TASK - 2 (Backend CRUD)
 
 ## Table of Contents:
-  - Screenshots
-  - Installation & Setup
+  - Screenshots (POSTMAN)
 
 ## Screenshots (POSTMAN)
 Create Lead:
