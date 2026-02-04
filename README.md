@@ -1,6 +1,6 @@
 ## Screenshots
 ![Frontend Home Page](./screenshots/frontend.png)
-![Backend](./screenshots/backend.png
+![Backend](./screenshots/backend.png)
 
 ## Installation & Setup
 
