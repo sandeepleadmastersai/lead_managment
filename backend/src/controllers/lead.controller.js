@@ -27,3 +27,14 @@ export const createLead = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+
+export const getLeads = async (req, res) => {
+    try {
+        const leads = await Lead.find().sort({ createdAt: -1 });
+        return res.status(200).json(leads);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
+};
