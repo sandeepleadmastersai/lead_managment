@@ -11,7 +11,7 @@ export const createLead = async (req, res) => {
             res.status(400).json({ message: "All Fields are required!" });
         }
 
-        if (!["manual", "add", "referral"].includes(source)) {
+        if (!["manual", "ad", "referral"].includes(source)) {
             res.status(400).json({ message: "Invalid source" });
         }
 

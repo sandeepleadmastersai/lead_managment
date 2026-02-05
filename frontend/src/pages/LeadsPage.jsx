@@ -1,73 +1,149 @@
 import { useEffect, useState } from "react";
 import { API } from "../api/axios.js";
 
-function LeadsPage() {
-    const [leads, setLeads] = useState([]);
-    const [loading, setLoading] = useState(false);
+export default function LeadsPage() {
+  const [leads, setLeads] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    source: "manual",
+  });
 
-    const fetchLeads = async () => {
-        try {
-            setLoading(true);
-            const response = await API.get("/leads");
-            const leads = response.data;
+  // Fetch leads from backend
+  const fetchLeads = async () => {
+    try {
+      setLoading(true);
+      const res = await API.get("/leads");
+      setLeads(res.data);
+      setLoading(false);
+    } catch (err) {
+      setError("Failed to fetch leads");
+      setLoading(false);
+    }
+  };
 
-            if (leads && leads.length > 0) {
-                setLeads(leads);
-                setLoading(false);
-            } else {
-                setLeads([]);
-                setLoading(false);
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    };
+  useEffect(() => {
+    fetchLeads();
+  }, []);
 
-    useEffect(() => {
-        fetchLeads();
-    }, []);
+  // Handle status update
+  const handleStatusChange = async (leadId, newStatus) => {
+    try {
+      const res = await API.patch(`/leads/${leadId}/status`, {
+        status: newStatus,
+      });
+      setLeads((prev) =>
+        prev.map((lead) => (lead._id === leadId ? res.data : lead))
+      );
+    } catch {
+      alert("Failed to update status");
+    }
+  };
 
+  // Handle form submission
+  const handleAddLead = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await API.post("/leads", formData);
+      setLeads([res.data, ...leads]);
+      setFormData({ name: "", phone: "", source: "manual" });
+    } catch {
+      alert("Failed to add lead");
+    }
+  };
 
-    console.log(leads);
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl mb-4">Leads</h1>
 
+      {/* Add Lead Form */}
+      <form onSubmit={handleAddLead} className="mb-6 flex gap-2">
+        <input
+          type="text"
+          placeholder="Name"
+          value={formData.name}
+          onChange={(e) =>
+            setFormData({ ...formData, name: e.target.value })
+          }
+          required
+          className="border p-2 rounded"
+        />
+        <input
+          type="text"
+          placeholder="Phone"
+          value={formData.phone}
+          onChange={(e) =>
+            setFormData({ ...formData, phone: e.target.value })
+          }
+          required
+          className="border p-2 rounded"
+        />
+        <select
+          value={formData.source}
+          onChange={(e) =>
+            setFormData({ ...formData, source: e.target.value })
+          }
+          className="border p-2 rounded"
+        >
+          <option value="manual">Manual</option>
+          <option value="ad">Ad</option>
+          <option value="referral">Referral</option>
+        </select>
+        <button type="submit" className="bg-blue-500 text-white px-4 rounded">
+          Add Lead
+        </button>
+      </form>
 
-    return (
-        <div>
-            <h1>Leads Page</h1>
-            {
-                loading ? (
-                    <p>Loading Leads...</p>
-                ) : (
-                    <ul>
-                        {
-                            leads.map((leadItem) => <li>{leadItem.name}</li>)
-                        }
-                    </ul>
-                )
-            }
-            {/* <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Phone</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Mark</td>
-                        <td>1</td>
-                        <td>new</td>
-                    </tr>
-                    <tr>
-                        <td>Jacob</td>
-                        <td>2</td>
-                        <td>new</td>
-                    </tr>
-                </tbody>
-            </table> */}
-        </div>
-    );
+      {/* Loading/Error */}
+      {loading && <p>Loading leads...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+
+      {/* Leads Table */}
+      <table className="w-full border-collapse table-auto">
+        <thead>
+          <tr className="border-b">
+            <th className="text-left p-2">Name</th>
+            <th className="text-left p-2">Phone</th>
+            <th className="text-left p-2">Source</th>
+            <th className="text-left p-2">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {leads.map((lead) => (
+            <tr key={lead._id} className="border-b">
+              <td className="p-2">{lead.name}</td>
+              <td className="p-2">{lead.phone}</td>
+              <td className="p-2">{lead.source}</td>
+              <td className="p-2">
+                <select
+                  value={lead.status}
+                  onChange={(e) =>
+                    handleStatusChange(lead._id, e.target.value)
+                  }
+                  className="border rounded p-1"
+                >
+                  <option value="new">New</option>
+                  <option value="contacted">Contacted</option>
+                  <option value="closed">Closed</option>
+                </select>
+                <span
+                  className={`ml-2 px-2 py-1 rounded text-white ${
+                    lead.status === "new"
+                      ? "bg-green-500"
+                      : lead.status === "contacted"
+                      ? "bg-yellow-500"
+                      : "bg-gray-500"
+                  }`}
+                >
+                  {lead.status}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
-
-export default LeadsPage;
