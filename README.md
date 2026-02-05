@@ -53,3 +53,9 @@ Delete Lead:
 ![Delete Lead](./screenshots/deleteLead.png)
 
 ---
+
+## TASK - 3
+
+Leads table and Add Leads:
+![Leads](./screenshots/leads_recording.mp4)
+
