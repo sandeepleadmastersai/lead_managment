@@ -18,7 +18,7 @@ export const createLead = async (req, res) => {
         const lead = await Lead.create(req.body);
 
         if (!lead) {
-            res.status(500).json({ message: "Some error has occured"});
+            res.status(500).json({ message: "Some error has occured" });
         }
 
         return res.status(201).json(lead);
@@ -32,8 +32,29 @@ export const createLead = async (req, res) => {
 
 export const getLeads = async (req, res) => {
     try {
-        const leads = await Lead.find().sort({ createdAt: -1 });
-        return res.status(200).json(leads);
+        const { q = "", page = 1, limit = 10 } = req.query;
+        const query = {
+            $or: [
+                { name: { $regex: q, $options: "i" } },
+                { phone: { $regex: q } },
+            ],
+        };
+
+        const leads = await Lead.find(query)
+            .skip((page - 1) * limit)
+            .limit(parseInt(limit))
+            .sort({ createdAt: -1 });
+
+        const total = await Lead.countDocuments(query);
+
+        return res.status(200).json({
+            leads,
+            page: parseInt(page),
+            totalPages: Math.ceil(total / limit),
+            total,
+        });
+        // const leads = await Lead.find().sort({ createdAt: -1 });
+        // return res.status(200).json(leads);
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error.message });
@@ -46,19 +67,19 @@ export const updateLeadStatus = async (req, res) => {
         const { status } = req.body;
 
         if (!["new", "contacted", "closed"].includes(status)) {
-            res.status(400).json({ message: "Invalid Lead Source"});
-        } 
+            res.status(400).json({ message: "Invalid Lead Source" });
+        }
 
         const { id } = req.params;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            res.status(400).json({ message: "Lead ID not valid"});
+            res.status(400).json({ message: "Lead ID not valid" });
         }
 
         const lead = await Lead.findByIdAndUpdate(
             id,
             { status: req.body.status },
-            { new: true}, 
+            { new: true },
         );
 
         if (!lead) {
@@ -78,16 +99,16 @@ export const deleteLead = async (req, res) => {
         const { id } = req.params;
 
         if (!mongoose.Types.ObjectId.isValid(id)) {
-            res.status(400).json({ message: "Lead ID not valid"});
+            res.status(400).json({ message: "Lead ID not valid" });
         }
 
         const lead = await Lead.findByIdAndDelete(id);
 
         if (!lead) {
-            res.status(404).json({ message: "Lead not found"});
+            res.status(404).json({ message: "Lead not found" });
         }
 
-        return res.status(200).json({ message: "Lead deleted successfully"});
+        return res.status(200).json({ message: "Lead deleted successfully" });
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: error.message });
